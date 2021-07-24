@@ -1,0 +1,10 @@
+torch
+torchvision
+streamlit
+numpy
+pillow
+bayesian-optimization
+sklearn
+scikit-image
+opencv-python
+xgboost
