@@ -4,7 +4,7 @@ streamlit
 numpy
 pillow
 bayesian-optimization
-sklearn
+sklearn==0.22.2.post1
 scikit-image
 opencv-python-headless
 xgboost
