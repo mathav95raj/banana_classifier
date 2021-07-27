@@ -36,7 +36,7 @@ def model_loader(pth):
 
 
 # model.classifier[6].out_features = len(ltoi)
-# cnn_model = model_loader("cnn_model.pickle")
+cnn_model = model_loader("cnn_model.pickle")
 # params = {
 #     "gamma": 3.84122636666823,
 #     "max_depth": 36.46280220719902,
@@ -88,9 +88,9 @@ def predict_stage(pth):
     test_xgb_f = Fit.transform(test_xgb_f)
     with torch.no_grad():
         y = cnn_model(x).max(1)[1].item()
-    st.write("CNN prediction ", itol[y])
+    st.write("CNN prediction: ", itol[y])
     y = booster.predict(xgb.DMatrix(test_xgb_f))
-    st.write("CNN XGB prediction ", itol[y[0].argmax()])
+    st.write("CNN XGB prediction: ", itol[y[0].argmax()])
 
 
 if file is None:
