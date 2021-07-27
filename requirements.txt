@@ -4,5 +4,5 @@ streamlit
 numpy
 pillow
 bayesian-optimization
-opencv-python
+opencv-python-headless
 xgboost
