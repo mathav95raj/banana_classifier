@@ -6,5 +6,5 @@ pillow
 bayesian-optimization
 sklearn
 scikit-image
-opencv-python
+opencv-python-headless
 xgboost
