@@ -1,10 +1,10 @@
 from PIL import Image
-import numpy as np
 import streamlit as st
 import torch
 import torchvision.transforms as transforms
 import cv2
-from sklearn.preprocessing import StandardScaler
+
+# from sklearn.preprocessing import StandardScaler
 import pickle
 import xgboost as xgb
 from xgboost import XGBClassifier
@@ -35,17 +35,7 @@ def model_loader(pth):
     return model
 
 
-# model.classifier[6].out_features = len(ltoi)
 cnn_model = model_loader("cnn_model.pickle")
-# params = {
-#     "gamma": 3.84122636666823,
-#     "max_depth": 36.46280220719902,
-#     "min_child_weight": 3.477294203777718,
-#     "n_estimators": 86.7722952613406,
-#     "num_boost_round": 962.1524651948235,
-#     "reg_alpha": 0.17400408126064204,
-#     "reg_lambda": 0.6379029525314178,
-# }
 
 
 booster = xgb.Booster()
@@ -80,17 +70,20 @@ def predict_stage(pth):
     list(cnn_model.classifier.children())[3].register_forward_hook(
         get_activation("fc1")
     )
+    cnn_model.eval()
     with torch.no_grad():
-        _ = cnn_model(x.to(device))
+        y = cnn_model(x.to(device))
     activations = activation["fc1"]
     test_xgb_f = torch.cat((test_xgb_f, activations.detach().cpu()), dim=0)
     test_xgb_f = test_xgb_f.detach().numpy()
     test_xgb_f = Fit.transform(test_xgb_f)
-    with torch.no_grad():
-        y = cnn_model(x).max(1)[1].item()
+    y = y.max(1)[1].item()
     st.write("CNN prediction: ", itol[y])
+    del y
+    torch.cuda.empty_cache()
     y = booster.predict(xgb.DMatrix(test_xgb_f))
     st.write("CNN XGB prediction: ", itol[y[0].argmax()])
+    del y
 
 
 if file is None:
