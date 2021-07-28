@@ -3,6 +3,5 @@ torchvision
 streamlit
 numpy
 pillow
-bayesian-optimization
 opencv-python-headless
 xgboost
