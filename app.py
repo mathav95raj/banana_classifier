@@ -3,8 +3,7 @@ import streamlit as st
 import torch
 import torchvision.transforms as transforms
 import cv2
-
-# from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import StandardScaler
 import pickle
 import xgboost as xgb
 from xgboost import XGBClassifier
@@ -57,7 +56,7 @@ def get_activation(name):
 
 
 def predict_stage(pth):
-    img = Image.open(pth)
+    img = Image.open(pth).convert("RGB")
     mods = transforms.Compose(
         [
             transforms.Resize((w, h)),
