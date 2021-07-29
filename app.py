@@ -7,6 +7,7 @@ from sklearn.preprocessing import StandardScaler
 import pickle
 import xgboost as xgb
 from xgboost import XGBClassifier
+import io
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -27,9 +28,17 @@ st.write("A Image Classification Web App That Detects the Ripeness Stage of Bana
 file = st.file_uploader("Please Upload an image of banana", type=["jpg", "png", "jpeg"])
 
 
+class CPU_Unpickler(pickle.Unpickler):
+    def find_class(self, module, name):
+        if module == "torch.storage" and name == "_load_from_bytes":
+            return lambda b: torch.load(io.BytesIO(b), map_location="cpu")
+        else:
+            return super().find_class(module, name)
+
+
 def model_loader(pth):
     f = open(pth, "rb")
-    model = pickle.load(f)
+    model = CPU_Unpickler(f).load()
     f.close()
     return model
 
