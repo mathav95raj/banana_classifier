@@ -50,8 +50,8 @@ booster = xgb.Booster()
 booster.load_model("cnnxgb_model.bin")
 Fit = model_loader("scaler_fit.pickle")
 
-mean_tens = torch.tensor([0.5, 0.456, 0.406])
-std_tens = torch.tensor([0.229, 0.224, 0.225])
+mean_tens = torch.tensor([0.7011, 0.6698, 0.4972])
+std_tens = torch.tensor([0.1924, 0.2086, 0.2690])
 
 
 activation = {}
