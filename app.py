@@ -84,7 +84,7 @@ def predict_stage(pth):
     activations = activation["fc1"]
     test_xgb_f = torch.cat((test_xgb_f, activations.detach().cpu()), dim=0)
     test_xgb_f = test_xgb_f.detach().numpy()
-    # test_xgb_f = Fit.transform(test_xgb_f)
+    test_xgb_f = Fit.transform(test_xgb_f)
     y = y.max(1)[1].item()
     st.write("CNN prediction: ", itol[y])
     del y
