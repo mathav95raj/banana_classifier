@@ -4,6 +4,7 @@ import torch
 import torchvision.transforms as transforms
 import cv2
 from sklearn.preprocessing import StandardScaler
+from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 import pickle
 import xgboost as xgb
 from xgboost import XGBClassifier
@@ -16,7 +17,7 @@ itol = {0: "Unripe :(", 1: "Ripe :)", 2: "Overripe -.-"}
 w = 200
 h = 200
 stages = list(ltoi.keys())
-f_size = 10
+f_size = 25
 
 st.write(
     """
@@ -49,7 +50,7 @@ cnn_model = model_loader("cnn_model.pickle")
 booster = xgb.Booster()
 booster.load_model("cnnxgb_model.bin")
 Fit = model_loader("scaler_fit.pickle")
-
+lf = model_loader("lda_model.pickle")
 mean_tens = torch.tensor([0.7011, 0.6698, 0.4972])
 std_tens = torch.tensor([0.1924, 0.2086, 0.2690])
 
@@ -85,6 +86,7 @@ def predict_stage(pth):
     test_xgb_f = torch.cat((test_xgb_f, activations.detach().cpu()), dim=0)
     test_xgb_f = test_xgb_f.detach().numpy()
     test_xgb_f = Fit.transform(test_xgb_f)
+    test_xgb_f = lf.transform(test_xgb_f)
     y = y.max(1)[1].item()
     st.write("CNN prediction: ", itol[y])
     del y
